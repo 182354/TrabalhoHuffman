@@ -8,13 +8,15 @@ using namespace std;
 int main() {
     int option;
 
+    Huffman::ler_arquivo();
+
     do {
         wcout << L"===== Menu de Codificação Huffman =====" << endl;
-        wcout << L"1. Ler e analisar arquivos de texto" << endl;
-        wcout << L"2. Construir uma árvore de Huffman" << endl;
-        wcout << L"3. Gerar tabela de codificação" << endl;
-        wcout << L"4. Exibir a árvore e a tabela" << endl;
-        wcout << L"5. Exibir o tamanho do arquivo original, o tamanho resultante da compactação e a diferença entre ambos (valores absoluto e percentual)" << endl;
+        wcout << L"1. Mostrar o texto lido" << endl;
+        wcout << L"2. Exibir a árvore" << endl;
+        wcout << L"3. Exibir tabela" << endl;
+        wcout << L"4. Exibir o tamanho do arquivo original" << endl;
+        wcout << L"5. Exibir o tamanho do resultante da compactação e a diferença entre ambos (valores absoluto e percentual)" << endl;
         wcout << L"6. Sair" << endl;
         wcout << L"Escolha uma opção: ";
 
@@ -22,16 +24,16 @@ int main() {
 
         switch(option) {
             case 1:
-                Huffman::ler_arquivo_w();
+                // Mostrar texto lido
                 break;
             case 2:
-                // Implementar a operação de construir uma árvore de Huffman
+                // Implementar a operação de exibir árvore de Huffman
                 break;
             case 3:
-                // Implementar a operação de gerar e exibir tabela de codificação
+                // Implementar a operação de exibir tabela de codificação
                 break;
             case 4:
-                // Implementar a operação de exibir a árvore e a tabela
+                // Implementar a operação de exibir o tamanho do arquivo original
                 break;
             case 5:
                 // Implemente a operação de exibir o tamanho do arquivo
