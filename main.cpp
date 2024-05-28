@@ -8,7 +8,12 @@ using namespace std;
 int main() {
     int option;
 
-    Huffman::ler_arquivo();
+    wstring filename;
+
+    wcout << L"Digite o nome do arquivo que queira compactar: ";
+    getline(std::wcin, filename);
+
+    Huffman::ler_arquivo(filename);
 
     do {
         wcout << L"===== Menu de Codificação Huffman =====" << endl;
@@ -24,7 +29,8 @@ int main() {
 
         switch(option) {
             case 1:
-                // Mostrar texto lido
+                Huffman::exibir_texto(filename);
+                cout << endl;
                 break;
             case 2:
                 // Implementar a operação de exibir árvore de Huffman

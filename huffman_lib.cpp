@@ -7,12 +7,7 @@
 
 namespace Huffman {
 
-    void ler_arquivo() {
-        std::wstring filename;
-
-        std::wcout << L"Digite o nome do arquivo que queira compactar: ";
-        std::getline(std::wcin, filename);
-
+    void ler_arquivo(std::wstring& filename) {
         std::wifstream arq(filename.c_str());
         if (!arq) {
             std::wcout << L"\nNão foi possível abrir o arquivo.\n\n";
@@ -26,12 +21,24 @@ namespace Huffman {
         while(arq.get(c)){
             frequencia[c]++;
         }
-
-        for(const auto& c : frequencia){
-            std::wcout << L"Caractere: " << c.first << L" - Frequência: " << c.second << std::endl;
-        }
     
-        std:: cout << std::endl;
+        std::wcout << std::endl;
+
+        arq.close();
+    }
+
+    void exibir_texto(std::wstring& filename) {
+        std::wifstream arq(filename.c_str());
+        if (!arq) {
+            std::wcout << L"\nNão foi possível abrir o arquivo.\n\n";
+            exit(2);
+        }
+
+        wchar_t c;
+        while(arq.get(c)){
+            std::wcout << c;
+        }
+        std::wcout << std::endl;
 
         arq.close();
     }
