@@ -6,7 +6,6 @@ Essa estratégia permite reduzir o tamanho geral do arquivo, otimizando o espaç
 ## Sobre
 Este é um software em desenvolvido em C++ que constrói árvores de Huffmann a partir de arquivos de texto.
 
-
 * Leitura e análise de arquivos de texto: Extração da frequência de cada símbolo (caractere) no arquivo de texto. O programa aceita arquivos Unicode em vez de ASCII (utilizando wifstream, wstring e wchar_t).
 
 * Construção de uma árvore de Huffman: As frequências dos símbolos serão inseridas em uma árvore binária onde, cada nó representa um símbolo e sua frequência.
@@ -17,6 +16,25 @@ Este é um software em desenvolvido em C++ que constrói árvores de Huffmann a 
 
 * Exibição do tamanho do arquivo original, o tamanho resultante da compactação e a diferença entre ambos (valores absoluto e percentual).
 
+## Extensões Utilizadas no Windows 
+
+* C/C++ Compile Run -- Autor -- danielPinto8zz6
+
+* No windows Fazer a instalacao tdm-gcc https://jmeubank.github.io/tdm-gcc/download/
+
+* Para vizualizar a Arvore gerada utilizar a extensão Graphviz Interactive Preview -- Autor -- tintinWeb
+
+## Funcionamento
+
+* O programa funciona da seguite maneira.
+
+* O usuario devera selecionar o arquivo txt que deseja compactar.
+
+* Caso encontrado, o programa ira realizar compreensão, trazendo os dados no arquivo resultado.txt e tambem ira realizar a montagem da árvore no arquivo arvore.dot.
+
+* A arvore podera ser visualizada utilizando a extesão posteriormente baixada.
+
 ## Autores
+
  * [Guilherme S. Machado](https://github.com/guilhermesvm)
  * [Luis Henrique Frandoloso](https://github.com/182354)
