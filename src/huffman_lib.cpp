@@ -15,6 +15,13 @@ struct Node {
     Node *left, *right;
 };
 
+// Função de comparação para a fila de prioridade 
+struct CompareNodes {
+    bool operator()(Node* left, Node* right) {
+        return left->freq > right->freq;
+    }
+};
+
 // Função para contar a frequência de cada caractere
 std::unordered_map<wchar_t, int> count_frequency(std::wifstream &inputFile) {
     unordered_map<wchar_t, int> freq;
