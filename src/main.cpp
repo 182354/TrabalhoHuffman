@@ -13,9 +13,11 @@ int main() {
     wcout << L"Digite o nome do arquivo que queira compactar: ";
     getline(std::wcin, filename);
 
-    Huffman::ler_arquivo(filename);
+    map<wchar_t, int> frequencia = Huffman::ler_arquivo(filename);
 
-    std::streampos fileSize;
+    streampos fileSize;
+
+    Huffman::node* raiz = nullptr; // Declare a variável raiz aqui
 
     do {
         wcout << L"===== Menu de Codificação Huffman =====" << endl;
@@ -37,7 +39,8 @@ int main() {
                 wcout << endl;
                 break;
             case 2:
-                // Implementar a operação de exibir árvore de Huffman
+                raiz = Huffman::criar_arvore(frequencia);
+                Huffman::show(raiz);
                 break;
             case 3:
                 // Implementar a exibição tabela de codificação
