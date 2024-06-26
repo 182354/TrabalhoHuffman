@@ -50,7 +50,7 @@ std::string pointer_to_string(const void* ptr) {
 }
 
 // Função para converter uma string wide (unicode) para UTF-8
-std::string to_uft8(const std::wstring& wstr) {
+std::string to_utf8(const std::wstring& wstr) {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.to_bytes(wstr);
 }
@@ -71,13 +71,12 @@ Node* create_tree(const std::unordered_map<wchar_t, int>& freq) {
         int sumFrequency = left->freq + right->freq;
         priorityQueue.push(create_node(L'\0', sumFrequency, left, right));
     }
-
     return priorityQueue.top();
 }
 
 
 // Função para percorrer a árvore de Huffman e gerar os códigos binários
-void encode(Node *root, std::wstring code, unordered_map<wchar_t, std::wstring> &huffmanCodes) {
+void encode(Node *root, std::wstring code, std::unordered_map<wchar_t, std::wstring> &huffmanCodes) {
     if (!root) return;
 
     // Nodo folha: armazenar código no mapa
@@ -89,7 +88,6 @@ void encode(Node *root, std::wstring code, unordered_map<wchar_t, std::wstring> 
     encode(root->right, code + L'1', huffmanCodes);
 }
 
-// Função para exportar a árvore de Huffman para um arquivo .dot (usado pelo Graphviz)
 void export_to_dot(const Node* root, const std::string& filename, const std::unordered_map<wchar_t, std::wstring> &huffmanCodes) {
     std::ofstream dotFile(filename);
     dotFile << "digraph G {\n";
@@ -101,7 +99,7 @@ void export_to_dot(const Node* root, const std::string& filename, const std::uno
         const Node* currentNode = nodeQueue.front();
         nodeQueue.pop();
 
-        std::string nodeName = "Node" + std::to_string(reinterpret_cast<std::uintptr_t>(currentNode));
+        std::string nodeName = "Node" + std::to_string(reinterpret_cast<uintptr_t>(currentNode));
         std::string label;
 
         bool isInternalNode = false;
@@ -141,10 +139,24 @@ void export_to_dot(const Node* root, const std::string& filename, const std::uno
     dotFile << "}\n";
 }
 
+// Função para desenhar a árvore de Huffman usando o Graphviz
+void draw_tree(const Node* root, const std::unordered_map<wchar_t, std::wstring>& huffmanCodes) {
+    std::string dotFilename = "../output/arvore.dot";
+    export_to_dot(root, dotFilename, huffmanCodes);
+}
+
+// Função para liberar a memória da árvore
+void free_tree(Node *root) {
+    if (!root) return;
+    free_tree(root->left);
+    free_tree(root->right);
+    delete root;
+}
+
 
 // Função principal para construir a árvore de Huffman, gerar frequência de caracteres e tabela de codificaçao
 void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
-    if (!inputFile) return;
+ if (!inputFile) return;
 
     std::unordered_map<wchar_t, int> freq = count_frequency(inputFile);
 
@@ -155,14 +167,34 @@ void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
         else outputFile << it.first << L": " << it.second << std::endl;
     }
 
-    //To do
+    Node* root = create_tree(freq);
+    std::unordered_map<wchar_t, std::wstring> huffmanCodes;
+    encode(root, L"", huffmanCodes);
+
+    outputFile << L"\nCódigos binários gerados pela árvore de Huffman:\n";
+    for (const auto &it : huffmanCodes) {
+        if (it.first == L' ') outputFile << L"ESPAÇO: " << it.second << std::endl;
+        else if (it.first == L'\n') outputFile << L"\\n: " << it.second << std::endl;
+        else outputFile << it.first << L": " << it.second << std::endl;
+    }
+
+    // Calcular a taxa de compressão
+    inputFile.clear();
+    inputFile.seekg(0, std::ios::end);
+    int originalSize = inputFile.tellg();
+    int compressedSize = 0;
+    for (const auto &it : freq) {
+        compressedSize += it.second * huffmanCodes[it.first].length();
+    }
+    compressedSize = (compressedSize + 7) / 8;
+
+    double compressionRatio = ((double)(originalSize - compressedSize) / originalSize) * 100;
+
+    outputFile << L"\nTamanho original: " << originalSize << L" bytes" << std::endl;
+    outputFile << L"Tamanho compactado: " << compressedSize << L" bytes" << std::endl;
+    outputFile << L"Redução: " << compressionRatio << L"%\n";
+
+    draw_tree(root, huffmanCodes);
+    free_tree(root);
 }
 
-
-// Função para liberar a memória da árvore
-void free_tree(Node *root) {
-    if (!root) return;
-    free_tree(root->left);
-    free_tree(root->right);
-    delete root;
-}
