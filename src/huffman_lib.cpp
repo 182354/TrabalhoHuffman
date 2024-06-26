@@ -50,8 +50,8 @@ std::string pointer_to_string(const void* ptr) {
 }
 
 // Função para converter uma string wide (unicode) para UTF-8
-std::string to_uft8(const wstring& wstr) {
-    std::wstring_convert<codecvt_utf8<wchar_t>> converter;
+std::string to_uft8(const std::wstring& wstr) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.to_bytes(wstr);
 }
 
@@ -73,4 +73,20 @@ Node* create_tree(const std::unordered_map<wchar_t, int>& freq) {
     }
 
     return priorityQueue.top();
+}
+
+// Função principal para construir a árvore de Huffman, gerar frequência de caracteres e tabela de codificaçao
+void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
+    if (!inputFile) return;
+
+    std::unordered_map<wchar_t, int> freq = count_frequency(inputFile);
+
+    outputFile << L"Frequência de caracteres:\n";
+    for (const auto &it : freq) {
+        if (it.first == L' ') outputFile << L"ESPAÇO: " << it.second << std::endl;
+        else if (it.first == L'\n') outputFile << L"\\n: " << it.second << std::endl;
+        else outputFile << it.first << L": " << it.second << std::endl;
+    }
+
+    //To do
 }
