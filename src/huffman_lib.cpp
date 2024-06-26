@@ -42,6 +42,19 @@ Node *create_node(const wchar_t c, int freq, Node *left, Node *right) {
     return pointer;
 }
 
+// Função para converter ponteiro em string para identificação única dos nodo
+string pointer_to_string(const void* ptr) {
+    stringstream ss;
+    ss << reinterpret_cast<uintptr_t>(ptr);
+    return ss.str();
+}
+
+// Função para converter uma string wide (unicode) para UTF-8
+string to_uft8(const wstring& wstr) {
+    wstring_convert<codecvt_utf8<wchar_t>> converter;
+    return converter.to_bytes(wstr);
+}
+
 // Função para criar a árvore de Huffman
 Node* create_tree(const std::unordered_map<wchar_t, int>& freq) {
     std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priorityQueue;
