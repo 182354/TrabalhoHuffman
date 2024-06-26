@@ -24,7 +24,7 @@ struct CompareNodes {
 
 // Função para contar a frequência de cada caractere
 std::unordered_map<wchar_t, int> count_frequency(std::wifstream &inputFile) {
-    unordered_map<wchar_t, int> freq;
+    std::unordered_map<wchar_t, int> freq;
     wchar_t c;
     while (inputFile.get(c)) {
         freq[c]++;
@@ -40,4 +40,24 @@ Node *create_node(const wchar_t c, int freq, Node *left, Node *right) {
     pointer->left = left;
     pointer->right = right;
     return pointer;
+}
+
+// Função para criar a árvore de Huffman
+Node* create_tree(const std::unordered_map<wchar_t, int>& freq) {
+    std::priority_queue<Node*, std::vector<Node*>, CompareNodes> priorityQueue;
+    for (const auto &it : freq) {
+        priorityQueue.push(create_node(it.first, it.second, nullptr, nullptr));
+    }
+
+    while (priorityQueue.size() != 1) {
+        Node *left = priorityQueue.top();
+        priorityQueue.pop();
+        Node *right = priorityQueue.top();
+        priorityQueue.pop();
+
+        int sumFrequency = left->freq + right->freq;
+        priorityQueue.push(create_node(L'\0', sumFrequency, left, right));
+    }
+
+    return priorityQueue.top();
 }
