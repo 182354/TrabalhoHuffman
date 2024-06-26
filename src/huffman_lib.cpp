@@ -75,6 +75,20 @@ Node* create_tree(const std::unordered_map<wchar_t, int>& freq) {
     return priorityQueue.top();
 }
 
+
+// Função para percorrer a árvore de Huffman e gerar os códigos binários
+void encode(Node *root, std::wstring code, unordered_map<wchar_t, std::wstring> &huffmanCodes) {
+    if (!root) return;
+
+    // Nodo folha: armazenar código no mapa
+    if (!root->left && !root->right) {
+        huffmanCodes[root->c] = code;
+    }
+
+    encode(root->left, code + L'0', huffmanCodes);
+    encode(root->right, code + L'1', huffmanCodes);
+}
+
 // Função principal para construir a árvore de Huffman, gerar frequência de caracteres e tabela de codificaçao
 void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
     if (!inputFile) return;
