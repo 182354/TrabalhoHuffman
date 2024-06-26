@@ -89,6 +89,59 @@ void encode(Node *root, std::wstring code, unordered_map<wchar_t, std::wstring> 
     encode(root->right, code + L'1', huffmanCodes);
 }
 
+// Função para exportar a árvore de Huffman para um arquivo .dot (usado pelo Graphviz)
+void export_to_dot(const Node* root, const std::string& filename, const std::unordered_map<wchar_t, std::wstring> &huffmanCodes) {
+    std::ofstream dotFile(filename);
+    dotFile << "digraph G {\n";
+
+    std::queue<const Node*> nodeQueue;
+    nodeQueue.push(root);
+
+    while (!nodeQueue.empty()) {
+        const Node* currentNode = nodeQueue.front();
+        nodeQueue.pop();
+
+        std::string nodeName = "Node" + std::to_string(reinterpret_cast<std::uintptr_t>(currentNode));
+        std::string label;
+
+        bool isInternalNode = false;
+
+        if (currentNode->c == L'\0') {
+            label = std::to_string(currentNode->freq);
+            isInternalNode = true;
+        } else {
+            std::string valueStr;
+            if (currentNode->c == L' ') valueStr = "SPACE";
+            else if (currentNode->c == L'\n') valueStr = "NEWLINE";
+            else if (currentNode->c == L'"') valueStr = "QUOTE";
+            else if (currentNode->c == L'>') valueStr = "GREATER_THAN";
+            else if (currentNode->c == L'<') valueStr = "LESS_THAN";
+            else if (currentNode->c == L'{') valueStr = "OPEN_BRACE";
+            else if (currentNode->c == L'}') valueStr = "CLOSE_BRACE";
+            else if (currentNode->c == L'|') valueStr = "PIPE";
+            else valueStr = to_utf8(std::wstring(1, currentNode->c));
+
+            std::string binaryCode = to_utf8(huffmanCodes.at(currentNode->c));
+            label = "{{'" + valueStr + "'|" + std::to_string(currentNode->freq) + "}|" + binaryCode + "}";
+        }
+        
+        dotFile << "\t" << nodeName << (isInternalNode ? " [label=\"" : " [shape=record, label=\"") << label << "\"];\n";
+
+        if (currentNode->left) {
+            std::string leftNodeName = "Node" + pointer_to_string(currentNode->left);
+            dotFile << "\t" << nodeName << " -> " << leftNodeName << " [label=\"0\"];\n";
+            nodeQueue.push(currentNode->left);
+        }
+        if (currentNode->right) {
+            std::string rightNodeName = "Node" + pointer_to_string(currentNode->right);
+            dotFile << "\t" << nodeName << " -> " << rightNodeName << " [label=\"1\"];\n";
+            nodeQueue.push(currentNode->right);
+        }
+    }
+    dotFile << "}\n";
+}
+
+
 // Função principal para construir a árvore de Huffman, gerar frequência de caracteres e tabela de codificaçao
 void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
     if (!inputFile) return;
@@ -103,4 +156,13 @@ void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
     }
 
     //To do
+}
+
+
+// Função para liberar a memória da árvore
+void free_tree(Node *root) {
+    if (!root) return;
+    free_tree(root->left);
+    free_tree(root->right);
+    delete root;
 }
