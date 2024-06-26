@@ -153,7 +153,6 @@ void free_tree(Node *root) {
     delete root;
 }
 
-
 // Função principal para construir a árvore de Huffman, gerar frequência de caracteres e tabela de codificaçao
 void build_tree_n_table(std::wifstream &inputFile, std::wofstream &outputFile) {
  if (!inputFile) return;

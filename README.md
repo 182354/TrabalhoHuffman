@@ -34,7 +34,15 @@ Este é um software em desenvolvido em C++ que constrói árvores de Huffmann a 
 
 * A arvore podera ser visualizada utilizando a extesão posteriormente baixada.
 
+## Pontos Importantes na Execucao
+
+* Para execucao utilizar o terminal -- Segue a ordem dos comandos:
+
+* "g++ main.cpp -o main"
+
+* "./main.exe"
+
 ## Autores
 
  * [Guilherme S. Machado](https://github.com/guilhermesvm)
- * [Luis Henrique Frandoloso](https://github.com/182354)
+ * [Luiz Henrique Frandoloso](https://github.com/182354)

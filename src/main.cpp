@@ -7,6 +7,7 @@
 using namespace std;
 
 int main() {
+
     // Solicitar o nome do arquivo do usuário
     string filename;
     cout << "Digite o nome do arquivo a ser comprimido: ";
@@ -29,9 +30,16 @@ int main() {
     // Verificar se o arquivo de saída foi aberto corretamente
     if (!outputFile) {
         cout << "Erro ao criar o arquivo de saída.\n";
-        return 2;
+        return 1;
     }
 
+    // Construir a árvore de Huffman e gerar a saída
+    build_tree_n_table(inputFile, outputFile);
+
+    inputFile.close();
+    outputFile.close();
+
+    cout << "Arquivos gerados na pasta 'output'.\n";
 
     return 0;
 }
